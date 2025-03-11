@@ -1,0 +1,182 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hacker Link Shortener</title>
+    <!-- Materialize CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+    <style>
+        /* Full-page hacker background */
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: url('https://i.gifer.com/7gtn.gif') no-repeat center center fixed;
+            background-size: cover;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Dark overlay to ensure readability */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7); /* Dark transparent overlay */
+            backdrop-filter: blur(5px);
+        }
+
+        /* Centered container */
+        .container {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        /* Rounded Logo */
+        .logo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid #00ff00;
+            box-shadow: 0px 0px 10px #00ff00;
+            margin-bottom: 10px;
+        }
+
+        .card {
+            padding: 20px;
+            background: rgba(59, 59, 59, 0.85); /* Dark background for hacker theme */
+            color: #00ff00; /* Green text like hacker screens */
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px #00ff00;
+        }
+
+        .card-title {
+            font-weight: bold;
+            text-align: center;
+            font-size: 24px;
+            color: #00ff00;
+            animation: flicker 1.5s infinite alternate;
+        }
+
+        /* Flickering text effect */
+        @keyframes flicker {
+            0% { opacity: 1; text-shadow: 0 0 10px #00ff00; }
+            50% { opacity: 0.8; text-shadow: 0 0 20px #00ff00; }
+            100% { opacity: 1; text-shadow: 0 0 30px #00ff00; }
+        }
+
+        .btn-large {
+            width: 100%;
+            background-color: #00ff00;
+            color: black;
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 10px 0;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 5px;
+        }
+
+        .copy-icon {
+            cursor: pointer;
+            color: #00ff00;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="overlay"></div> <!-- Dark overlay for hacker effect -->
+
+    <div class="container">
+        <!-- Rounded Logo -->
+        <img src="https://www.strausscenter.org/wp-content/uploads/Elazari_hacker_square-1024x1010.jpg" alt="Logo" class="logo">
+        
+        <div class="card">
+            <span class="card-title">MILES' LINK SHORTENER</span>
+            <div class="input-field">
+                <input id="redirect_url" type="text" class="validate">
+                <label for="redirect_url">Enter URL to Shorten</label>
+            </div>
+            <button id="redirect_btn" class="btn-large waves-effect waves-light">Shorten Link</button>
+            <div id="domain_result" class="center-align"></div>
+        </div>
+    </div>
+
+    <!-- Materialize JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+        function generateShortCode() {
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let shortCode = '';
+            for (let i = 0; i < 5; i++) {
+                shortCode += characters[Math.floor(Math.random() * characters.length)];
+            }
+            return shortCode;
+        }
+
+        function shortenLink() {
+            const baseURL = 'https://github.com/';
+            return baseURL + generateShortCode();
+        }
+
+        function copyToClipboard(text) {
+            const textarea = document.createElement("textarea");
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand("copy");
+            document.body.removeChild(textarea);
+            M.toast({html: 'Copied to clipboard!', classes: 'green'});
+        }
+
+        document.getElementById('redirect_btn').addEventListener('click', function() {
+            const url = document.getElementById('redirect_url').value;
+            const domainResultElement = document.getElementById('domain_result');
+
+            if (url) {
+                domainResultElement.innerHTML = '';
+
+                for (let i = 0; i < 5; i++) {
+                    const shortenedLink = shortenLink();
+                    const resultRow = document.createElement('div');
+                    resultRow.classList.add('result-row');
+                    
+                    const resultText = document.createElement('span');
+                    resultText.textContent = shortenedLink;
+
+                    const copyIcon = document.createElement('i');
+                    copyIcon.classList.add('material-icons', 'copy-icon');
+                    copyIcon.textContent = 'content_copy';
+                    copyIcon.addEventListener('click', function() {
+                        copyToClipboard(shortenedLink);
+                    });
+
+                    resultRow.appendChild(resultText);
+                    resultRow.appendChild(copyIcon);
+                    domainResultElement.appendChild(resultRow);
+                }
+            } else {
+                M.toast({html: 'Please enter a valid URL!', classes: 'red'});
+            }
+        });
+    </script>
+
+</body>
+</html>
+
+
